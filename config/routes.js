@@ -5,6 +5,7 @@ var Index = require('../app/controllers/index');
 var Movie = require('../app/controllers/movie');
 var User = require('../app/controllers/user');
 var Comment = require('../app/controllers/comment');
+var Category = require('../app/controllers/category');
 
 module.exports = function (app) {
 	// 拦截器
@@ -12,6 +13,7 @@ module.exports = function (app) {
 		// console.log('拦截器');
 		// console.log(req.session.user);
 		var _user = req.session.user;
+		// console.log(_user)
 		// if (_user) {
 		app.locals.user = _user;
 		// }
@@ -49,11 +51,11 @@ module.exports = function (app) {
 
 	app.get('/movie/:id', Movie.detail)
 
-	app.post('/admin/movie/new', User.signinRequired, User.adminRequired, Movie.new)
+	app.get('/admin/movie/new', User.signinRequired, User.adminRequired, Movie.new)
 
 	app.get('/admin/movie/update/:id', User.signinRequired, User.adminRequired, Movie.update)
 
-	app.get('/admin/movie', User.signinRequired, User.adminRequired, Movie.save)
+	app.post('/admin/movie/save', User.signinRequired, User.adminRequired, Movie.save)
 
 	app.get('/admin/movie/list', User.signinRequired, User.adminRequired, Movie.list)
 
@@ -64,5 +66,15 @@ module.exports = function (app) {
 
 	// Comment
 	app.post('/movie/comment', User.signinRequired, Comment.save)
+
+
+
+	// Category
+	app.get('/admin/category/new', User.signinRequired, User.adminRequired, Category.new)
+
+	app.post('/admin/category', User.signinRequired, User.adminRequired, Category.save)
+
+	app.get('/admin/category/list', User.signinRequired, User.adminRequired, Category.list)
+	
 }
 

@@ -1,4 +1,6 @@
 var Movie = require('../models/movie');
+var Category = require('../models/category');
+var Comment = require('../models/comment');
 var _ = require('underscore');
 
 
@@ -8,52 +10,35 @@ exports.detail = function (req, res) {
 		if (err) {
 			console.log(err);
 		}
-		res.render('detail', {
-			title: movie.title + '详情页',
-			movie: movie
+
+		Comment.find({'movie': id}).populate('from', 'name').populate('reply.from reply.to', 'name').exec(function (err, comments) {
+			// console.log(comments[2].reply);
+			if (err) {
+				console.log(err);
+			}
+			// console.log(movie);
+			res.render('detail', {
+				title: movie.title + '详情页',
+				movie: movie,
+				comments: comments
+			})
 		})
+		
 	})
 }
 
 exports.new = function (req, res) {
-	// console.log(req.body);
-	var id = req.body.movie._id;
-	var movieObj = req.body.movie
-	var _movie
-	// console.log('add movie');
-	if (id !== 'undefined') {
-		Movie.findById(id, function (err, movie) {
-			if (err) {
-				console.log(err);
-			}
-
-			_movie = _.extend(movie, movieObj);
-			_movie.save(function (err, movie) {
-				if (err) {
-					console.log(err);
-				}
-				res.redirect('/movie/' + movie._id);
-			})
+	Category.fetch(function (err, categories) {
+		if (err) {
+			console.log(err);
+		}
+		res.render('admin', {
+			title: '后台录入页',
+			movie: {},
+			categories: categories
 		})
-	} else {
-		_movie = new Movie({
-			title: movieObj.title,
-			doctor: movieObj.doctor,
-			county: movieObj.county,
-			language: movieObj.language,
-			year: movieObj.year,
-			summary: movieObj.summary,
-			flash: movieObj.flash,
-			poster: movieObj.poster
-		})
-
-		_movie.save(function (err, movie) {
-			if (err) {
-				console.log(err);
-			}
-			res.redirect('/movie/' + movie._id);
-		})
-	}
+	})
+	
 }
 
 exports.update = function (req, res) {
@@ -73,19 +58,37 @@ exports.update = function (req, res) {
 }
 
 exports.save = function (req, res) {
-	res.render('admin', {
-		title: '后台录入页',
-		movie: {
-			title: '',
-			doctor: '',
-			county: '',
-			language: '',
-			year: '',
-			summary: '',
-			flash: '',
-			poster: ''
-		}
-	})
+	// console.log(req.body);
+	var id = req.body.movie._id;
+	var movieObj = req.body.movie
+	console.log(movieObj);
+	var _movie
+	// console.log('add movie');
+	if (id) {
+		Movie.findById(id, function (err, movie) {
+			if (err) {
+				console.log(err);
+			}
+
+			_movie = _.extend(movie, movieObj);
+			_movie.save(function (err, movie) {
+				if (err) {
+					console.log(err);
+				}
+				res.redirect('/movie/' + movie._id);
+			})
+		})
+	} else {
+		_movie = new Movie(movieObj);
+
+		_movie.save(function (err, movie) {
+			if (err) {
+				console.log(err);
+			}
+			res.redirect('/movie/' + movie._id);
+		})
+	}
+		
 }
 
 exports.list = function (req, res) {

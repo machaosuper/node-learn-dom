@@ -1,4 +1,6 @@
 var mongoose = require('mongoose');
+var Schema = mongoose.Schema;
+var ObjectId = Schema.Types.ObjectId
 
 var MovieSchema = new mongoose.Schema({
 	title: String,
@@ -9,6 +11,10 @@ var MovieSchema = new mongoose.Schema({
 	summary: String,
 	poster: String,
 	flash: String,
+	category: {
+		type: ObjectId,
+		ref: 'Category'
+	},
 	meta: {
 		createAt: {
 			type: Date,
