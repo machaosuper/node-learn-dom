@@ -43,15 +43,21 @@ exports.new = function (req, res) {
 
 exports.update = function (req, res) {
 	var id = req.params.id;
+
 	if (id) {
 		Movie.findById(id, function (err, movie) {
 			if (err) {
 				console.log(err);
 			}
-			console.log(movie);
-			res.render('admin', {
-				title: '后台更新页面',
-				movie: movie
+			Category.fetch(function (err, categories) {
+				if (err) {
+					console.log(err);
+				}
+				res.render('admin', {
+					title: '后台更新页面',
+					movie: movie,
+					categories: categories
+				})
 			})
 		})
 	}
@@ -61,7 +67,7 @@ exports.save = function (req, res) {
 	// console.log(req.body);
 	var id = req.body.movie._id;
 	var movieObj = req.body.movie
-	console.log(movieObj);
+	// console.log(movieObj);
 	var _movie
 	// console.log('add movie');
 	if (id) {
@@ -81,12 +87,58 @@ exports.save = function (req, res) {
 	} else {
 		_movie = new Movie(movieObj);
 
-		_movie.save(function (err, movie) {
-			if (err) {
-				console.log(err);
+		var categoryId = movieObj.category;
+		var categoryName = movieObj.categoryName;
+		
+			if (categoryId) {
+				_movie.save(function (err, movie) {
+					if (err) {
+						console.log(err);
+					}
+					Category.findById(categoryId, function (err, category) {
+						if (err) {
+							console.log(err);
+						}
+						category.movies.push(movie._id);
+						category.save(function (err, category) {
+							res.redirect('/movie/' + movie._id);
+						})
+					})	
+				})
+			} else if (categoryName) {
+				Category.findOne({name: categoryName}, function (err, category) {
+					if (err) {
+						console.log(err);
+					}
+					if (category) {
+						_movie.category = category._id;
+						_movie.save(function (err, movie) {
+							if (err) {
+								console.log(err);
+							}
+							category.movies.push(movie._id);
+							category.save(function (err, category) {
+								res.redirect('/movie/' + movie._id);
+							})
+						})
+					} else {
+						var _category = new Category({
+							name: categoryName,
+							movies: [movie._id]
+						})
+						_category.save(function (err, category) {
+							_movie.category = category._id;
+							_movie.save(function (err, movie) {
+								if (err) {
+									console.log(err);
+								}
+								res.redirect('/movie/' + movie._id);
+							})
+						})
+					}
+				})
 			}
-			res.redirect('/movie/' + movie._id);
-		})
+			
 	}
 		
 }

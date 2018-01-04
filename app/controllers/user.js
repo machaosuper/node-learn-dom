@@ -90,7 +90,7 @@ exports.list = function (req, res) {
 		})
 	})
 }
-
+// 登录
 exports.signinRequired = function (req, res, next) {
 	var user = req.session.user;
 	if (!user) {
@@ -98,7 +98,7 @@ exports.signinRequired = function (req, res, next) {
 	}
 	next ()
 }
-
+// 权限
 exports.adminRequired = function (req, res, next) {
 	var user = req.session.user;
 	if (user.role <= 10) {
