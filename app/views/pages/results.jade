@@ -12,19 +12,22 @@ block content
 							.col-md-2
 								.thumbnail
 									a(href="/movie/#{item._id}")
-										img(src="#{item.poster}", alt="#{item.title}", width="200", heigth="500")
+										if item.poster.indexOf('http') > -1
+											img(src="#{item.poster}", alt="#{item.title}", width="200", heigth="500")
+										else
+											img(src="/upload/#{item.poster}", alt="#{item.title}", width="200", heigth="500")
 									.caption
 										h3 #{item.title}
 										p: a.btn.btn-primary(href="/movie/#{item._id}", role="button")
 											观看预告片 #{totalPage}
-				ul.pagination
-					- for (var i = 0; i < totalPage; i++) {
-						- if (currentPage == (i + 1)) {
-							li.active
-								span #{currentPage}
-						- }
-						- else {
-							li
-								a(href="/results?cat=#{catId}&p=#{i}") #{i + 1}
-						- }
-					- }	
+			ul.pagination
+				- for (var i = 0; i < totalPage; i++) {
+					- if (currentPage == (i + 1)) {
+						li.active
+							span #{currentPage}
+					- }
+					- else {
+						li
+							a(href="/results?#{query}&p=#{i}") #{i + 1}
+					- }
+				- }	

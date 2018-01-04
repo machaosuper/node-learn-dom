@@ -34,6 +34,23 @@ app.use(session({
 	})
 }));
 
+var multer = require("multer");
+app.use(multer());
+
+// 文件上传插件
+// var multer = require('multer');
+// var storage = multer.diskStorage({
+// 	destination: function (req, file, cb) {
+// 	    cb(null, './public/upload')
+// 	},
+// 	filename: function (req, file, cb) {
+// 	    cb(null, file.originalFilename)
+// 	}
+// });
+// var upload = multer({ storage: storage });
+// var cpUpload = upload.any();
+// app.use(cpUpload);
+
 
 
 app.locals.moment = require('moment');

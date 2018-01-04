@@ -55,7 +55,7 @@ module.exports = function (app) {
 
 	app.get('/admin/movie/update/:id', User.signinRequired, User.adminRequired, Movie.update)
 
-	app.post('/admin/movie/save', User.signinRequired, User.adminRequired, Movie.save)
+	app.post('/admin/movie/save', User.signinRequired, User.adminRequired, Movie.savePoster, Movie.save)
 
 	app.get('/admin/movie/list', User.signinRequired, User.adminRequired, Movie.list)
 
