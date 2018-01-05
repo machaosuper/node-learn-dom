@@ -11,7 +11,7 @@ exports.signup = function (req, res) {
 			// console.log(user);
 			return res.redirect('/signin');
 		} else {
-			var user = new User(_user);
+			user = new User(_user);
 			user.save(function (err, user) {
 				if (err) {
 					console.log(err);
@@ -61,7 +61,6 @@ exports.signin = function (req, res) {
 				return res.redirect('/');
 			} else {
 				return res.redirect('/signin');
-				console.log('密码不正确');
 			}
 		})
 	})

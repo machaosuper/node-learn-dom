@@ -3,6 +3,25 @@ var path = require('path');
 var bodyParser = require('body-parser');
 
 
+var fs = require('fs');
+
+// model loading
+var models_path = __dirname + '/app/models';
+var walk = function (path) {
+	fs.readdirSync(path).forEach(function (file) {
+		var newPath = path + '/' + file;
+		var stat = fs.statSync(newPath);
+		if (stat.isFile) {
+			if (/(.*)\.(js|coffee)/.test(file)) {
+				require(newPath);
+			}
+		} else if (stat.isDirectory) {
+			walk(path);
+		}
+	})
+}
+walk(models_path);
+
 var mongoose = require('mongoose');
 
 
@@ -27,6 +46,8 @@ var mongoStore = require('connect-mongo')(session);
 app.use(cookieParser());
 app.use(session({
 	secret: 'mac',
+	resave: false,
+  	saveUninitialized: true,
 	store: new mongoStore({
 		url: dbUrl,
 		ttl: 14 * 24 * 60 * 60, // = 14 days. Default
@@ -34,8 +55,8 @@ app.use(session({
 	})
 }));
 
-var multer = require("multer");
-app.use(multer());
+// var multer = require("multer");
+// app.use(multer());
 
 // 文件上传插件
 // var multer = require('multer');
@@ -67,7 +88,9 @@ app.use(express.static(path.join(__dirname, 'public')))
 
 app.listen(port);
 
-if ('development' === app.get('env')) {
+
+var env = process.env.NODE_ENV || 'development';
+if ('development' === env) {
 	app.set('showStackError');
 	app.use(logger(':method :url :status'));
 	app.locals.pretty = true;

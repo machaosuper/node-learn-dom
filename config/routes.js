@@ -7,6 +7,9 @@ var User = require('../app/controllers/user');
 var Comment = require('../app/controllers/comment');
 var Category = require('../app/controllers/category');
 
+var multipart = require('connect-multiparty');
+var multipartMiddleware = multipart();
+
 module.exports = function (app) {
 	// 拦截器
 	app.use(function (req, res, next) {
@@ -55,7 +58,7 @@ module.exports = function (app) {
 
 	app.get('/admin/movie/update/:id', User.signinRequired, User.adminRequired, Movie.update)
 
-	app.post('/admin/movie/save', User.signinRequired, User.adminRequired, Movie.savePoster, Movie.save)
+	app.post('/admin/movie/save', User.signinRequired, User.adminRequired, multipartMiddleware, Movie.savePoster, Movie.save)
 
 	app.get('/admin/movie/list', User.signinRequired, User.adminRequired, Movie.list)
 

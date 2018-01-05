@@ -14,13 +14,20 @@
     "underscore": "^1.8.3"
   },
   "devDependencies": {
+    "connect-multiparty": "^2.1.0",
     "cookie-parser": "^1.4.3",
     "express-session": "^1.15.6",
     "grunt": "^1.0.1",
     "grunt-concurrent": "^2.3.1",
+    "grunt-contrib-jshint": "^1.1.0",
+    "grunt-contrib-less": "^1.4.1",
+    "grunt-contrib-uglify": "^3.3.0",
     "grunt-contrib-watch": "^1.0.0",
+    "grunt-mocha-test": "^0.13.3",
     "grunt-nodemon": "^0.4.2",
-    "multer": "^0.1.8"
+    "mocha": "^4.1.0",
+    "multer": "^0.1.8",
+    "should": "^13.2.0"
   },
   "scripts": {
     "start": "node app.js",
