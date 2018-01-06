@@ -103,6 +103,9 @@ exports.save = function (req, res) {
 	// console.log(movieObj);
 	var _movie
 
+	var categoryId = movieObj.category;
+
+
 	if (req.poster) {
 		movieObj.poster = req.poster;
 	}
@@ -113,19 +116,39 @@ exports.save = function (req, res) {
 			if (err) {
 				console.log(err);
 			}
+			var oldCategoryId = movie.category;
+
 
 			_movie = _.extend(movie, movieObj);
 			_movie.save(function (err, movie) {
 				if (err) {
 					console.log(err);
 				}
-				res.redirect('/movie/' + movie._id);
+				if (categoryId && (oldCategoryId != categoryId)) {
+					Category.update({_id: oldCategoryId}, {'$pull': {movies: movie._id}}, function (err) {
+						if (err) {
+							console.log(err);
+						}
+
+						Category.findById(categoryId, function (err, category) {
+							if (err) {
+								console.log(err);
+							}
+							category.movies.push(movie._id);
+							category.save(function (err, category) {
+								res.redirect('/movie/' + movie._id);
+							})
+						})
+						
+					})
+				} else {
+					res.redirect('/movie/' + movie._id);
+				}
 			})
 		})
 	} else {
 		_movie = new Movie(movieObj);
 
-		var categoryId = movieObj.category;
 		var categoryName = movieObj.categoryName;
 		
 		if (categoryId) {
