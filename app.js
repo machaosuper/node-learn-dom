@@ -25,7 +25,7 @@ walk(models_path);
 var mongoose = require('mongoose');
 
 
-var dbUrl = 'mongodb://localhost/mac';
+var dbUrl = 'mongodb://localhost/mac-movie';
 
 mongoose.connect(dbUrl);
 

@@ -118,5 +118,8 @@ module.exports = function (grunt) {
 	grunt.option('force', true);
 	// 默认被执行的任务列表。
     grunt.registerTask('default', 'concurrent');
+
+    grunt.registerTask('build', ['less', 'uglify']);
+
 	grunt.registerTask('test', 'mochaTest');
 }
