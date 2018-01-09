@@ -124,7 +124,7 @@ exports.save = function (req, res) {
 				if (err) {
 					console.log(err);
 				}
-				if (categoryId && (oldCategoryId != categoryId)) {
+				if (categoryId && (oldCategoryId !== categoryId)) {
 					Category.update({_id: oldCategoryId}, {'$pull': {movies: movie._id}}, function (err) {
 						if (err) {
 							console.log(err);
